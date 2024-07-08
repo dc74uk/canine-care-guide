@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canine Care Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Canine Care Guide</h1>
+    <textarea id="userInput" placeholder="Ask about your dog..."></textarea>
+    <button onclick="getResponse()">Submit</button>
+    <div id="response"></div>
+
+    <script>
+        async function getResponse() {
+            const userInput = document.getElementById('userInput').value;
+            const responseElement = document.getElementById('response');
+            const apiKey = 'YOUR_API_KEY_HERE';
+
+            const response = await fetch('https://api.openai.com/v1/engines/davinci/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    prompt: userInput,
+                    max_tokens: 150,
+                    n: 1,
+                    stop: null,
+                    temperature: 0.5
+                })
+            });
+
+            const data = await response.json();
+            responseElement.innerText = data.choices[0].text.trim();
+       
